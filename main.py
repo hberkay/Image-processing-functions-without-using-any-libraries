@@ -6,13 +6,13 @@ from matplotlib import pyplot as plt
 from tkinter import ttk
 from tkinter.filedialog import askopenfilename
 
-def resimsec():
+def selectpic():
     Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
     filename = askopenfilename()  # show an "Open" dialog box and return the path to the selected file
     im_ = Image.open(filename)
     im_.show()
     return im_
-im = resimsec()
+im = selectpic()
 np_im = numpy.array(im)
 original_im = np_im
 
@@ -58,11 +58,11 @@ list_im = np_im.tolist()
 
 
 def bandw(list_image):
-    esik = int(input('esik degeri gir:'))
+    threshold = int(input('enter threshold value:'))
     i, j = [0, 0]
     for i in range(len(list_image)):
         for j in range(len(list_image[i])):
-            if list_image[i][j] < esik:
+            if list_image[i][j] < threshold:
                 list_image[i][j] = 0
             else:
                 list_image[i][j] = 255
@@ -73,10 +73,10 @@ def bandw(list_image):
 
 
 def cut(list_image):
-    print('Resim boyutları X:', len(list_image[0]), 'Y:', len(list_image))
+    print('Image dimensions X:', len(list_image[0]), 'Y:', len(list_image))
     while 1:
-        x, y = [int(x) for x in input("Baslangic Kordinatlari Girin  (X Y): ").split()]
-        x2, y2 = [int(x) for x in input("Bitis Kordinatlari Girin  (X Y): ").split()]
+        x, y = [int(x) for x in input("Enter Initial Coordinates  (X Y): ").split()]
+        x2, y2 = [int(x) for x in input("Enter End Coordinates  (X Y): ").split()]
         if x < 0 or x > len(list_image[0]) or y < 0 or y > len(list_image) or x2 < x or x2 < 0 or x2 > len(
                 list_image[0]) or y2 < y or y2 < 0 or y2 > len(list_image):
             print('Hatali kordinat girdisi')
@@ -138,38 +138,38 @@ def zoom(zoom_list):
     return zoom_list.tolist()
 
 
-def zoomout(uzak_list):
-    uzak_list = numpy.array(uzak_list)
-    uzak_list = uzak_list.tolist()
+def zoomout(zoomout_list):
+    zoomout_list = numpy.array(zoomout_list)
+    zoomout_list = zoomout_list.tolist()
     a = []
     b = []
     k = 0
     new = []
     temp = []
-    while k < len(uzak_list)-1:
+    while k < len(zoomout_list)-1:
         i = 0
-        while i < len(uzak_list[0])-1:
-            temp.append((uzak_list[k][i] + uzak_list[k][i + 1]) / 2)
+        while i < len(zoomout_list[0])-1:
+            temp.append((zoomout_list[k][i] + zoomout_list[k][i + 1]) / 2)
             i += 2
         new = list(temp)
         a.append(new)
         temp.clear()
         k += 1
     k = 0
-    while k < len(uzak_list) - 2:
+    while k < len(zoomout_list) - 2:
         j = 0
-        while j < len(a[k]) and k + 1 < len(uzak_list):
+        while j < len(a[k]) and k + 1 < len(zoomout_list):
             temp.append((a[k][j] + a[k + 1][j]) / 2)
             j += 1
         new = list(temp)
         b.append(new)
         temp.clear()
         k += 2
-    uzak_list = numpy.array(b)
-    im2 = Image.fromarray(uzak_list)
+    zoomout_list = numpy.array(b)
+    im2 = Image.fromarray(zoomout_list)
     im2.show()
     b.clear()
-    return uzak_list.tolist()
+    return zoomout_list.tolist()
 
 def histogram(histogram_list):
     histogram_ = numpy.zeros((256), numpy.uint64)
